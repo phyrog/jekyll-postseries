@@ -25,3 +25,5 @@ You can add a block with links to other posts in this series by using the Liquid
 ```
 {% post_series %}
 ```
+
+![screenshot](https://raw.githubusercontent.com/phyrog/jekyll-postseries/screenshots/screenshot.png)

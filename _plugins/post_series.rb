@@ -2,25 +2,29 @@ module Jekyll
   class PostSeriesTag < Liquid::Tag
     
     def render(context)
-      current_series = context.registers[:page]["series"]
+      site = context.registers[:site]
+      page = context.registers[:page]
+      current_series = page["series"]
+      type = page["collection"]
+      puts site
       unless current_series.nil?
-        posts = context.registers[:site].posts.map do |post|
-          if !post.data["series"].nil? && post.data["series"] == current_series
-            post
+        collection = site.collections[type].map do |item|
+          if item.data["series"] && item.data["series"] == current_series
+            item
           end
         end.compact
 
-        idx = posts.find_index { |p| p.id == context.registers[:page]["id"] } + 1
+        idx = collection.find_index { |p| p.id == page["id"] } + 1
 
         <<-TEXT
 <div class="post-series">
-  <h1>This post is <strong>Part #{idx}</strong> in a <strong>#{posts.size}-Part</strong> series.</h1>
+  <h1>This is <strong>Part #{idx}</strong> in a <strong>#{collection.size}-Part</strong> series.</h1>
   <ol>
-  #{posts.each_with_index.map do |p, i|
+  #{collection.each_with_index.map do |item, i|
       if (i + 1) == idx
-        "<li>Part #{i + 1}: #{p.data["title"]}</li>"
+        "<li>Part #{i + 1}: #{item.data["title"]}</li>"
       else
-        "<li><a href=\"#{p.url}\">Part #{i + 1}: #{p.data["title"]}</a></li>"
+        "<li><a href=\"#{item.url}\">Part #{i + 1}: #{item.data["title"]}</a></li>"
       end
   end .join("") }
   </ol>

@@ -6,9 +6,8 @@ module Jekyll
       page = context.registers[:page]
       current_series = page["series"]
       type = page["collection"]
-      puts site
       unless current_series.nil?
-        collection = site.collections[type].map do |item|
+        collection = site.collections[type].docs.map do |item|
           if item.data["series"] && item.data["series"] == current_series
             item
           end
